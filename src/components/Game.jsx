@@ -1,18 +1,19 @@
 import React, { useState, useEffect } from "react";
 import Card from "./Card";
 import Scoreboard from "./Scoreboard";
+import Styles from "./styles.css";
 
 const pokemonList = [
-  {pokemon: "Pikachu", shown: false},
-  {pokemon: "Charizard", shown: false},
-  {pokemon: "Scyther", shown: false},
-  {pokemon: "Blastoise", shown: false},
-  {pokemon: "Alakazam", shown: false},
-  {pokemon: "Rhydon", shown: false},
-  {pokemon: "Mewtwo", shown:false},
-  {pokemon: "Gengar", shown: false},
-  {pokemon: "Jolteon", shown: false},
-  {pokemon: "Dragonite", shown: false}
+  { pokemon: "Pikachu", shown: false },
+  { pokemon: "Charizard", shown: false },
+  { pokemon: "Scyther", shown: false },
+  { pokemon: "Blastoise", shown: false },
+  { pokemon: "Alakazam", shown: false },
+  { pokemon: "Rhydon", shown: false },
+  { pokemon: "Mewtwo", shown: false },
+  { pokemon: "Gengar", shown: false },
+  { pokemon: "Jolteon", shown: false },
+  { pokemon: "Dragonite", shown: false },
 ];
 
 function Game({ startGame, handleStart, showElement }) {
@@ -31,35 +32,36 @@ function Game({ startGame, handleStart, showElement }) {
     setUserSelection(null);
     setCurrentPokemonIndex(Math.floor(Math.random() * pokemonList.length));
     // console.log(currentPokemonIndex)
+    setShown(true);
   };
+
+  const resetGame = () => {
+    if (currentScore > bestScore) {
+      setBestScore(currentScore);
+    }
+    setCurrentScore(0);
+    pokemonList.forEach((pokemon) => {
+      pokemon.shown = false;
+    });
+  };
+  
 
   const handleCardClick = (selection) => {
     if (userSelection === null) {
       setUserSelection(selection);
-
-      if ((selection == true && shown == false)|| (selection == false && shown == true)) {
+  
+      const currentPokemon = pokemonList[currentPokemonIndex];
+      if (currentPokemon.shown && !selection) {
+        setCurrentScore(currentScore + 1);
+      } else if (!currentPokemon.shown && selection) {
         setCurrentScore(currentScore + 1);
       } else {
-        if (currentScore > bestScore) {
-          setBestScore(currentScore);
-        }
-        setCurrentScore(0);
+        resetGame();
       }
-
-      // if (currentPokemonIndex === pokemonList.length - 1) {
-      //   // Reached the last Pokémon, reset the game
-      //   setTimeout(() => {
-      //     setCurrentPokemonIndex(0);
-      //     displayRandomPokemon();
-      //   }, 1000);
-      // } else {
-      //   // Move to the next Pokémon
-      //   setTimeout(() => {
-      //     setCurrentPokemonIndex(currentPokemonIndex + 1);
-      //   }, 1000);
-      // }
+      currentPokemon.shown = true;
     }
   };
+  
 
   return (
     <div className="game">
@@ -75,6 +77,6 @@ function Game({ startGame, handleStart, showElement }) {
       />
     </div>
   );
-};
+}
 
 export default Game;
